@@ -7,6 +7,8 @@ Created on Sun May 14 08:47:59 2017
 
 import numpy as np
 from numpy import linalg as la
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # Generating Random Rotation Matrices
 def projection(u, v):
