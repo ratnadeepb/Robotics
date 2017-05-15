@@ -63,10 +63,23 @@ def matrix2vector(R):
         raise ValueError("Invalid Input")
     
     # Start of Calculations
-        theta = np.rad2deg(math.acos((R.diagonal().sum() - 1) / 2))
+    theta = np.rad2deg(math.acos((R.diagonal().sum() - 1) / 2))
     
+    if theta < 0:
+        theta = - theta
+    if theta > 2 * np.pi:
+        theta %= 2 * np.pi
+        
     if theta == 0:
         v = np.array([np.NaN, np.NaN, np.NaN])
+    elif theta == np.pi:
+        den = np.sqrt((R[3,2] - R[2, 3])**2 + 
+                      (R[1,3] - R[3,1])**2 + 
+                      (R[2,1] - R[1, 2]**2))
+        r_x = (R[2, 1] - R[1, 2]) / den
+        r_y = (R[0, 2] - R[2, 0]) / den
+        r_z = (R[1, 0] - R[0, 1]) / den
+        v = np.array([r_x, r_y, r_z])
     else:
         eig = la.eig(R)
         eig_vals, eig_vectors = eig[0], eig[1]
@@ -76,8 +89,6 @@ def matrix2vector(R):
             e = np.real(e)
             if e > 1 - 0.1 and e < 1 + 0.1:
                 v = np.real(eig_vectors[:,i])
-    
-    theta = np.rad2deg(math.acos((R.diagonal().sum() - 1) / 2))
     
     return [v, theta]
 
